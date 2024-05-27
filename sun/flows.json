@@ -1,0 +1,180 @@
+[
+    {
+        "id": "0e2d789e0ba051b6",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6c23662f7c648d73",
+        "type": "function",
+        "z": "0e2d789e0ba051b6",
+        "name": "function 1",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0accd4214be3e46c",
+        "type": "inject",
+        "z": "0e2d789e0ba051b6",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 160,
+        "wires": [
+            [
+                "4eb14ed944f53e8e"
+            ]
+        ]
+    },
+    {
+        "id": "fbfe643d73d25853",
+        "type": "MSSQL",
+        "z": "0e2d789e0ba051b6",
+        "mssqlCN": "51f9cdf3a2d2be8b",
+        "name": "",
+        "outField": "payload",
+        "returnType": 0,
+        "throwErrors": 1,
+        "query": "",
+        "modeOpt": "",
+        "modeOptType": "query",
+        "queryOpt": "payload",
+        "queryOptType": "editor",
+        "paramsOpt": "queryParams",
+        "paramsOptType": "none",
+        "rows": "rows",
+        "rowsType": "msg",
+        "parseMustache": true,
+        "params": [],
+        "x": 540,
+        "y": 340,
+        "wires": [
+            [
+                "560f8ae13eb7cfbc"
+            ]
+        ]
+    },
+    {
+        "id": "4eb14ed944f53e8e",
+        "type": "http request",
+        "z": "0e2d789e0ba051b6",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://127.0.0.1:8000/forex/lak_to_vnd",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 350,
+        "y": 180,
+        "wires": [
+            [
+                "8b4708c3ad679b54"
+            ]
+        ]
+    },
+    {
+        "id": "560f8ae13eb7cfbc",
+        "type": "debug",
+        "z": "0e2d789e0ba051b6",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "525a69e78b6e7515",
+        "type": "function",
+        "z": "0e2d789e0ba051b6",
+        "name": "function",
+        "func": "var base_kip_lao = \"KIP\";\nvar rate_kip_to_vn = msg.payload.lak_to_vnd;\nvar currentDate = new Date();\nvar update_at = currentDate.toISOString().split('T')[0]; \n\nvar insertStatement = `INSERT INTO forex_rate (base_kip_lao, rate_kip_to_vn, update_at) VALUES ('${base_kip_lao}', ${rate_kip_to_vn}, '${update_at}')`;\n\nmsg.payload = insertStatement;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 300,
+        "wires": [
+            [
+                "fbfe643d73d25853"
+            ]
+        ]
+    },
+    {
+        "id": "8b4708c3ad679b54",
+        "type": "json",
+        "z": "0e2d789e0ba051b6",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 390,
+        "y": 240,
+        "wires": [
+            [
+                "525a69e78b6e7515"
+            ]
+        ]
+    },
+    {
+        "id": "51f9cdf3a2d2be8b",
+        "type": "MSSQL-CN",
+        "tdsVersion": "7_4",
+        "name": "MSSQL",
+        "server": "vengann\\SQLEXPRESS",
+        "port": "1433",
+        "encyption": true,
+        "trustServerCertificate": true,
+        "database": "Money",
+        "useUTC": true,
+        "connectTimeout": "15000",
+        "requestTimeout": "15000",
+        "cancelTimeout": "5000",
+        "pool": "5",
+        "parseJSON": false,
+        "enableArithAbort": true,
+        "readOnlyIntent": false
+    }
+]
